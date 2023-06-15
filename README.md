@@ -1,10 +1,17 @@
 # Sonetel-Node
 
-Sonetel-Node is a NodeJS library which provides a wrapper for using Sonetel's REST API's. It is written in TypeScript and can be installed using NPM. This library supports the following endpoints:
+Sonetel-Node is a NodeJS library which provides a wrapper for using Sonetel's REST API's. It is written in TypeScript and can be installed using NPM.
 
-1. Generate JWT - /SonetelAuth/beta/oauth/token
-2. View and update account information - /account/{accountId}
-3. View and manage user accounts - /account/{accountId}/user
+This library supports the following functions:
+
+1. Generate tokens for API authentication
+2. View and update account information
+3. Manage phone numbers, user accounts, voice apps and call recordings
+4. Make phone calls
+5. View usage records
+6. Use the Text-to-speech service
+7. Personalize suggested answers provided by our AI
+
 
 ## Installation
 
@@ -34,9 +41,9 @@ const sonetel = new Sonetel({
 Now, you can use any endpoint that is supported by this library:
 
 ```ts
-await sonetel.generateJWT();
-await sonetel.getAccountInfo();
-await sonetel.manageUserAccounts();
+await sonetel.generateToken();
+await sonetel.getAccount();
+await sonetel.listUsers();
 ```
 
 ## Documentation
