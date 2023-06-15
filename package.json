@@ -1,6 +1,6 @@
 {
   "name": "sonetel-node",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "NodeJS library for Sonetel APIs",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -25,6 +25,13 @@
   },
   "author": "Aashish Joshi",
   "license": "MIT",
+  "keywords": [
+    "sonetel",
+    "communication api",
+    "voice apps",
+    "telecom",
+    "communication"
+  ],
   "bugs": {
     "url": "https://github.com/aashish-joshi/sonetel-node/issues"
   },
