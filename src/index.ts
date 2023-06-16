@@ -24,7 +24,7 @@ export class Sonetel {
       url: apiEndpointAuth,
       auth: {
         username: 'sonetel-api',
-        password: 'sonetel-api'
+        password: 'sonetel-api',
       },
       headers: {
         'Content-Type': apiHeaderAuth,
@@ -35,7 +35,7 @@ export class Sonetel {
     const http = new HttpConnect();
     const response = await http.request(httpConfig);
     return response;
-  }
+  };
 
   getAccount() {
     return 'Sonetel getAccount';
