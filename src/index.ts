@@ -1,47 +1,77 @@
-import { HttpConnect } from './services/http';
-import { apiBaseAuth, apiHeaderAuth, apiEndpointAuth } from './common/const';
-import FormData = require('form-data');
+import { generateJwt } from './generators/token';
+import { getApiResponse } from './generators/apiResponse';
+import { apiEndpoints } from './common/const';
+import { parseJwt } from './common/functions';
+import { SonetelAccessToken, SonetelRefreshToken } from './common/interfaces';
 
 export class Sonetel {
   username: string;
   password: string;
+  decodedAccessToken?: SonetelAccessToken;
+  _accessToken?: string;
+  _refreshToken?: string;
+  accountId?: number;
+  userId?: string;
+  _decoded?: SonetelAccessToken;
+  expiry?: number;
 
   constructor(username: string, password: string) {
     this.username = username;
     this.password = password;
   }
 
-  generateToken = async (refresh: boolean = false) => {
-    const form = new FormData();
-    form.append('grant_type', 'password');
-    form.append('username', this.username);
-    form.append('password', this.password);
-    form.append('refresh', 'yes');
+  updateProps() {
+    if (this._accessToken) {
+      this._decoded = parseJwt(this._accessToken);
+      this.accountId = this._decoded.acc_id;
+      this.userId = this._decoded.user_id;
+      this.expiry = this._decoded.exp;
+    }
+  }
 
-    const httpConfig: object = {
-      method: 'post',
-      baseURL: apiBaseAuth,
-      url: apiEndpointAuth,
-      auth: {
-        username: 'sonetel-api',
-        password: 'sonetel-api',
-      },
-      headers: {
-        'Content-Type': apiHeaderAuth,
-        ...form.getHeaders(),
-      },
-      data: form,
-    };
-    const http = new HttpConnect();
-    const response = await http.request(httpConfig);
-    return response;
+  generateToken = async (refresh: boolean = false, action: string = 'new') => {
+    let apiResponse;
+    if (action === 'refresh' && this._refreshToken) {
+      apiResponse = await generateJwt(refresh, action, this.username, this.password, this._refreshToken);
+    } else {
+      apiResponse = await generateJwt(refresh, action, this.username, this.password);
+    }
+
+    if (!apiResponse) {
+      throw new Error('Unable to generate token');
+    } else if (apiResponse.access_token) {
+      this._accessToken = apiResponse.access_token;
+      if (apiResponse.refresh_token) {
+        this._refreshToken = apiResponse.refresh_token;
+      }
+      this.updateProps();
+      return apiResponse;
+    }
   };
 
-  getAccount() {
-    return 'Sonetel getAccount';
-  }
+  getAccount = async () => {
+
+    let url;
+    let response;
+    
+    if (!this.accountId || !this._accessToken) {
+      await this.generateToken();
+    }
+    url = `${apiEndpoints.account.endpoint}/${this.accountId}`;
+    response = await getApiResponse('get', url, {}, { Authorization: `Bearer ${this._accessToken}` });
+
+    if (response) {
+      return response;
+    } else {
+      throw new Error('Unable to get account' + response);
+    }
+  };
 
   getUsers() {
     return 'Sonetel getUers';
+  }
+
+  _checkTokenExpiration() {
+    return 'TBI';
   }
 }

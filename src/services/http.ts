@@ -1,4 +1,5 @@
 import axios, { Axios } from 'axios';
+import { HttpConfig } from '../common/interfaces';
 
 /**
  * @description http
@@ -7,12 +8,12 @@ import axios, { Axios } from 'axios';
  * @param {String} baseUrl - the base URL of the API service
  */
 export class HttpConnect {
-  request = async (config: object) => {
+  request = async (config: HttpConfig) => {
     try {
       const response = await axios(config);
       return response.data;
     } catch (error: any) {
-      throw new Error(JSON.stringify(error.response.data));
+      throw new Error(error.response);
     }
   };
 

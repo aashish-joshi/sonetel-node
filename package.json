@@ -38,6 +38,7 @@
   "homepage": "https://github.com/aashish-joshi/sonetel-node#readme",
   "devDependencies": {
     "@types/jest": "^29.5.2",
+    "dotenv": "^16.3.1",
     "jest": "^29.5.0",
     "prettier": "^2.8.8",
     "ts-jest": "^29.1.0",
